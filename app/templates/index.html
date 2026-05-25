@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="top-bar">
+  <form method="get" action="{{ url_for('public.index') }}" class="search-form">
+    <span>⌕</span>
+    <input 
+      type="text" 
+      name="search"
+      value="{{ search or '' }}"
+      placeholder="Search stories by title..."
+    >
+    <button type="submit">Search</button>
+  </form>
+
+  <p class="archive-label">personal novel archive</p>
+</section>
+
+{% if search %}
+  <p class="search-result-text">
+    Showing results for "{{ search }}"
+    <a href="{{ url_for('public.index') }}">Clear</a>
+  </p>
+{% endif %}
+
+<section class="stories-header">
+  <h1>Popular Stories<span> leaf </span></h1>
+  <p>Discover stories loved by readers in the community.</p>
+</section>
+
+<section class="novel-grid">
+  {% for novel in novels %}
+    <article class="novel-card">
+
+      {% if novel.cover_url %}
+        <img src="{{ novel.cover_url }}" alt="{{ novel.title }}" class="novel-cover">
+      {% else %}
+        <div class="cover-fallback">
+          <span>✦</span>
+          {{ novel.title }}
+        </div>
+      {% endif %}
+
+      <div class="novel-body">
+        <div>
+          <h2>{{ novel.title }}</h2>
+          <p class="novel-desc">{{ novel.description }}</p>
+          <p class="novel-count">{{ novel.chapters|length }} chapter{% if novel.chapters|length != 1 %}s{% endif %}</p>
+        </div>
+
+        <a href="{{ url_for('public.novel_detail', novel_id=novel.id) }}" class="view-btn">
+          <span> book </span> View Novel
+        </a>
+      </div>
+
+    </article>
+  {% else %}
+    <p>No novels yet.</p>
+  {% endfor %}
+</section>
+
+{% if novels %}
+  <div class="view-all-wrap">
+    <a href="{{ url_for('public.index') }}" class="view-all-btn">leaf View All Stories</a>
+  </div>
+{% endif %}
+
+{% endblock %}

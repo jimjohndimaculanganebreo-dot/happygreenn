@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="post" enctype="multipart/form-data" class="form-card">
+
+  <h1 class="font-serif text-4xl text-[#344C3D] mb-6">
+    {{ 'Edit Novel' if novel else 'Create Novel' }}
+  </h1>
+
+  <div class="space-y-5">
+
+    <div>
+      <label class="block mb-2 font-semibold text-[#344C3D]">
+        Novel Title
+      </label>
+
+      <input 
+        name="title"
+        value="{{ novel.title if novel else '' }}"
+        placeholder="Enter novel title"
+        class="input"
+        required
+      >
+    </div>
+
+    <div>
+      <label class="block mb-3 font-semibold text-[#344C3D]">
+        Upload Cover Image
+      </label>
+
+      <label class="upload-box">
+        <input 
+          type="file"
+          name="cover"
+          accept="image/*"
+          class="hidden"
+          id="coverInput"
+        >
+
+        <div class="upload-content">
+          <div class="upload-icon">↑</div>
+
+          <p class="upload-title">
+            Choose Cover Image
+          </p>
+
+          <p class="upload-subtitle">
+            JPG, PNG, WEBP
+          </p>
+        </div>
+      </label>
+
+      <p id="fileName" class="mt-3 text-sm text-[#738A6E]"></p>
+    </div>
+
+    {% if novel and novel.cover_url %}
+      <div class="mt-4">
+        <p class="mb-3 font-semibold text-[#344C3D]">
+          Current Cover
+        </p>
+
+        <img 
+          src="{{ novel.cover_url }}"
+          class="w-52 rounded-3xl shadow-lg border border-[#A2B997]/30"
+        >
+      </div>
+    {% endif %}
+
+    <div>
+      <label class="block mb-2 font-semibold text-[#344C3D]">
+        Description
+      </label>
+
+      <textarea 
+        name="description"
+        placeholder="Write the story description..."
+        class="input h-44"
+        required
+      >{{ novel.description if novel else '' }}</textarea>
+    </div>
+
+    <label class="flex items-center gap-3 text-[#344C3D] font-medium">
+      <input 
+        type="checkbox"
+        name="is_published"
+        class="w-5 h-5"
+        {% if not novel or novel.is_published %}checked{% endif %}
+      >
+
+      Published
+    </label>
+
+    <button class="btn-main mt-4">
+      Save Novel
+    </button>
+
+  </div>
+
+</form>
+
+<script>
+  const coverInput = document.getElementById("coverInput");
+  const fileName = document.getElementById("fileName");
+
+  coverInput.addEventListener("change", function() {
+    if (this.files.length > 0) {
+      fileName.textContent = "Selected File: " + this.files[0].name;
+    }
+  });
+</script>
+
+{% endblock %}
